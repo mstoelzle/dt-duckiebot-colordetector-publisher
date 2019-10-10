@@ -42,11 +42,9 @@ class PublisherNode(DTROS):
                         img = output.array
 
                         try:
-                            self.image_pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
+                            self.pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
                         except CvBridgeError as e:
                             print(e)
-
-                        self.pub.publish(message)
 
                         rospy.loginfo("Publishing message with image content.")
 
