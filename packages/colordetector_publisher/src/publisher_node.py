@@ -7,6 +7,7 @@ from duckietown import DTROS
 from std_msgs.msg import String
 import picamera
 import picamera.array
+from cv_bridge import CvBridge, CvBridgeError
 from time import sleep
 from pprint import pprint
 
@@ -19,6 +20,8 @@ class PublisherNode(DTROS):
         super(PublisherNode, self).__init__(node_name=node_name)
         # construct publisher
         self.pub = rospy.Publisher('MaxiColorDetector', String, queue_size=10)
+
+        self.bridge = CvBridge()
 
     def run(self):
         # publish message every 5 second
@@ -36,7 +39,13 @@ class PublisherNode(DTROS):
                     try:
                         camera.capture(output, 'rgb')
 
-                        message = output.array
+                        img = output.array
+
+                        try:
+                            self.image_pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
+                        except CvBridgeError as e:
+                            print(e)
+
                         self.pub.publish(message)
 
                         rospy.loginfo("Publishing message with image content.")
