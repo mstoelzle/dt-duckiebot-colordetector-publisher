@@ -51,16 +51,14 @@ class PublisherNode(DTROS):
 
                         rate.sleep()
                     except Exception as e:
-                        print("an exception occurred while capturing image and sending message: " +str(e))
-                        print("close camera now")
+                        print("an exception occurred while capturing image and sending message: ")
+                        print(e)
+                        print("closing camera now")
                         camera.close()
         camera.close()
 
     def publish_image(self,img):
-        try:
-            self.pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
-        except CvBridgeError as e:
-            print(e)
+        self.pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
 
         rospy.loginfo("Publishing message with image content.")
 
