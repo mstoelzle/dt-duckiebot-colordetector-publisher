@@ -18,8 +18,12 @@ class PublisherNode(DTROS):
     def __init__(self, node_name):
         # initialize the DTROS parent class
         super(PublisherNode, self).__init__(node_name=node_name)
+
+        self.vehicle_name = rospy.get_param("/vehicle_name")
+
         # construct publisher
-        self.pub = rospy.Publisher('MaxiColorDetector', CompressedImage, queue_size=10)
+        self.topic = '/' + self.vehicle_name + '/colordetector_publisher_node/image/compressed'
+        self.pub = rospy.Publisher(self.topic, CompressedImage, queue_size=10)
 
         self.bridge = CvBridge()
 
