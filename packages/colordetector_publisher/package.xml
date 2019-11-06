@@ -4,7 +4,7 @@
     <description>
         color-detector publisher
     </description>
-    <maintainer email="maximilian@stoelzle.ch">Maximilian Stölzle</maintainer>
+    <maintainer email="maximilian@stoelzle.ch">Maximilian Stoelzle</maintainer>
     <license>None</license>
 
     <buildtool_depend>catkin</buildtool_depend>

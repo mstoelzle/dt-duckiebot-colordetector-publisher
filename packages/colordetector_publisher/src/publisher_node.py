@@ -4,7 +4,7 @@ import os
 import pwd
 import rospy
 from duckietown import DTROS
-from std_msgs.msg import String
+from sensor_msgs.msg import CompressedImage
 import picamera
 import picamera.array
 from cv_bridge import CvBridge, CvBridgeError
@@ -19,20 +19,22 @@ class PublisherNode(DTROS):
         # initialize the DTROS parent class
         super(PublisherNode, self).__init__(node_name=node_name)
         # construct publisher
-        self.pub = rospy.Publisher('MaxiColorDetector', String, queue_size=10)
+        self.pub = rospy.Publisher('MaxiColorDetector', CompressedImage, queue_size=10)
 
         self.bridge = CvBridge()
+
+        # RaspberryPi Camera: mode = 0
+        # sample image: mode = 1
+        self.mode = 0
 
     def run(self):
         # publish message every 5 second
         rate = rospy.Rate(5) # 1Hz
 
-        print("before camera init")
         with picamera.PiCamera() as camera:
             w_x = 320
             w_y = 240
             camera.resolution = (w_x, w_y)
-            print("after camera init")
 
             while not rospy.is_shutdown():
                 with picamera.array.PiRGBArray(camera) as output:
@@ -41,12 +43,7 @@ class PublisherNode(DTROS):
 
                         img = output.array
 
-                        try:
-                            self.pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
-                        except CvBridgeError as e:
-                            print(e)
-
-                        rospy.loginfo("Publishing message with image content.")
+                        self.publish_image(img)
 
                         rate.sleep()
                     except Exception as e:
@@ -54,6 +51,14 @@ class PublisherNode(DTROS):
                         print("close camera now")
                         camera.close()
         camera.close()
+
+    def publish_image(self,img):
+        try:
+            self.pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
+        except CvBridgeError as e:
+            print(e)
+
+        rospy.loginfo("Publishing message with image content.")
 
 
 if __name__ == '__main__':

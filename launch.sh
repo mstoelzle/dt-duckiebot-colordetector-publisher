@@ -4,4 +4,6 @@ set -e
 
 # YOUR CODE BELOW THIS LINE
 # ----------------------------------------------------------------------------
-rosrun colordetector_publisher publisher_node.py
+roscore &
+sleep 5
+roslaunch colordetector_publisher colordetector_publisher.launch vehicle_name:=$VEHICLE_NAME

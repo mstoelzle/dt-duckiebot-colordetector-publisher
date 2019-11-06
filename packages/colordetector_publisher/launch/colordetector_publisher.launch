@@ -1,0 +1,7 @@
+<launch>
+    <arg name="vehicle_name" default="maxicar" doc="name of the duckiebot"/>
+    <param name="vehicle_name" type="str" value="$(arg vehicle_name)" />
+    <group ns="$(arg vehicle_name)">
+        <node pkg="colordetector_publisher" type="publisher_node.py" name="publisher_node" output="screen" args=""/>
+    </group>
+</launch>
