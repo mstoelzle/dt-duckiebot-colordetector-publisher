@@ -57,8 +57,9 @@ class PublisherNode(DTROS):
                         camera.close()
         camera.close()
 
-    def publish_image(self,img):
-        self.pub.publish(self.bridge.cv2_to_imgmsg(img, "bgr8"))
+    def publish_image(self, img):
+        img_message = self.bridge.cv2_to_compressed_imgmsg(img)
+        self.pub.publish(img_message)
 
         rospy.loginfo("Publishing message with image content.")
 
