@@ -43,7 +43,7 @@ class PublisherNode(DTROS):
             while not rospy.is_shutdown():
                 with picamera.array.PiRGBArray(camera) as output:
                     try:
-                        camera.capture(output, 'rgb')
+                        camera.capture(output, 'bgr')
 
                         img = output.array
 
